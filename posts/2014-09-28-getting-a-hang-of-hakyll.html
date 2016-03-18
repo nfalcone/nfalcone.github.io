@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>nick's home page - Getting a hang of hakyll</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">/home/nick</a>
+            </div>
+            <div id="navigation">
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a href="../misc">misc</a>
+		<a href="../links.html">Links</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Getting a hang of hakyll</h1>
+
+            <div class="info">
+    Posted on September 28, 2014
+    
+</div>
+
+<p>Okay so I figured for my first post for this “blog” I would write a few things on why I chose Hakyll, the site genrator for which this site is built with.</p>
+<p>First, I have frequently used <a href="http://jekyllrb.com/">Jekyll</a> for most of my projects that require a web page. It works fairly well and I know the ins and outs of it. So despite how much I like jekyll, and how well it works for me I always am looking to change something up or learn something new. And here we come across <a href="http://jaspervdj.be/hakyll/">Hakyll</a>, like Jekyll it is a static site generator just written in Haskell instead of Ruby, and uses pandoc for the document conversion.</p>
+<p>Pandoc is really a great piece of software, allowing you to convert just about any format of text into another. This way I am writing this blogpost in markdown, but pandoc converts it to html upon rendering.</p>
+<p>So I set out to try hakyll and ran into a few problems. One is that cabal, the package manager for Haskell is really out of date on Debian (my typical server OS of choice) and cabal basically compiles the software on the machine for use. The issue is a 256Mb VPS is not going to have enough RAM for this compiling process and OOB kills the process before it comes even close to completing. So what I did was load cabal onto a VM at home, and then wrote a simple bash script for “pushing” the finished compiled site to my nfalcone.info vps.</p>
+<p>So on the VM at home/ your machine with enough RAM to install hakyll:</p>
+<pre><code>sudo apt-get install cabal-install
+sudo cabal update
+sudo cabal install cabal-install --global</code></pre>
+<p>What the above does is basically bootstraps an install for a newer version of cabal with the old version packaged by debian, if you plan on using Hakyll on a different platform, like OSX you probably will not have to mess around with this.</p>
+<p>Then just a simple</p>
+<pre><code>sudo cabal install hakyll --global</code></pre>
+<p>Sometimes I have had to install pandoc first prior to hakyll, as it seems to get hung up on the wrong version for some reason.</p>
+<p>Now that I have hakyll installed I can finally build my site with:</p>
+<pre><code>hakyll-init nfalcone.info
+cd nfalcone.info
+ghc --make -threaded site.hs
+./site build</code></pre>
+<p>Now that is all fun to type out but when I want to edit and update my site I really do not want to type all that out and still have to upload it via ssh. So I built a cheap little script to do it, note that the VM I build the site on connects to the VPS that hosts the site via authorized ssh pubkey.</p>
+<script src="https://gist.github.com/nfalcone/889a536bd25809daf7cd.js"></script>
+<p>feel free to use or tweak or whatever, it just simplifies the whole process.</p>
+<p>After playing with Hakyll it seems really powerful, and more tweaking and working with will only tell if I start using Hakyll over Jekyll. Anyway that whole process should get hakyll running for you on a Debian 7 box, the VM I use to compile hakyll and the site only ahs about 1Gb of RAM so you really do not need a crazy VPS/VM to do this in but for a static site I really did not want to purchase one with 1Gb of RAM.</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//nfalcone.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+        <div id="footer">
+all works licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+</br>
+Site last generated: Fri Mar 11 17:48:45 UTC 2016        
+</div>
+    </body>
+</html>

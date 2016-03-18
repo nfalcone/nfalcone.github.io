@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>nick's home page - Building an OpenBSD Desktop (or laptop)</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">/home/nick</a>
+            </div>
+            <div id="navigation">
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a href="../misc">misc</a>
+		<a href="../links.html">Links</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Building an OpenBSD Desktop (or laptop)</h1>
+
+            <div class="info">
+    Posted on February 21, 2016
+    
+</div>
+
+<div class="figure">
+<img src="../images/openbsdlogo.gif" />
+
+</div>
+<p><strong>Note:</strong> This guide takes some liberties assuming you were able to install OpenBSD on your own. Also this guide was written and tested on the latest at the time OpenBSD 5.8.<br />
+Also basic networking whether that is wired or wireless is needed to be setup, so that is up to you.</p>
+<p>First when installing OpenBSD make sure you say to:</p>
+<pre><code>Do you expect to run the X Window System? [yes] yes
+Do you want the X Window System to be started by xdm(1)? [no] no
+(this is because we will use GDM for gnome 3)</code></pre>
+<h2 id="firewall-setup">Firewall Setup</h2>
+<p>Before we start installing anything lets setup a basic firewall.</p>
+<p><code>vi /etc/pf.conf</code> comment out or delete everything already in there, then add:</p>
+<pre><code>set block-policy drop
+set skip on lo0
+match in all scrub (no-df random-id max-mss 1440)
+antispoof quick for (egress)
+block in quick on egress from { no-route urpf-failed } to any
+block in all
+pass out quick inet keep state</code></pre>
+<h2 id="packages">Packages</h2>
+<p>Now we have to setup a package mirror to install software, pick a mirror from <a href="http://www.openbsd.org/ftp.html" class="uri">http://www.openbsd.org/ftp.html</a> And add it to root’s <code>.profile</code></p>
+<p><code>vi /root/.profile</code></p>
+<pre><code>export pkg_path=http://ftp.usa.openbsd.org/pub/OpenBSD/`uname -r`/packages/`uname -m`/</code></pre>
+<p>You can reboot or log off and log back in as root for the changes to take affect.</p>
+<p>Let’s also patch the system to the latest and greatest, you can do this manually via signify and the errata on openbsd.org or use the <code>openup</code> utility from mtier. For the best security you should be building the patches from source but for a laptop and quick setup mtier works well.</p>
+<pre><code>ftp https://stable.mtier.org/openup
+mv openup /usr/local/sbin/
+chmod +x /usr/local/sbin/openup
+openup</code></pre>
+<p>Installing needed packages</p>
+<pre><code>pkg_add -I gnome toadd firefox youtube-dl vim emacs irssi scrot mplayer ubuntu-fonts</code></pre>
+<p>for <code>/etc/login.conf</code> so that programs can utilize 1Gb of RAM like firefox or chromium</p>
+<pre><code>default:\
+...
+	datasize-cur=1024M:\
+	datasize-max=1024M:\</code></pre>
+<p>Now we have the right packages installed let’s setup our rc.conf to run the right programs on bootup.</p>
+<p><code>vim /etc/rc.conf.local</code></p>
+<pre><code>xdm_flags=NO  
+gnome_enable=YES  
+gdm_enable=YES
+multicast_host=YES  
+ntpd_flags=&quot;-s&quot;  
+hotplugd_flags=&quot;&quot;  
+pkg_scripts=&quot;messagebus avahi_daemon toad gdm&quot;  </code></pre>
+<p><strong>note messagebus is the replacement name for dbus_daemon as of 5.7</strong></p>
+<p>If you have a e new laptop and have noticed the fans running really loud or the battery life not so good, add this to <code>/etc/rc.conf.loal</code></p>
+<pre><code>apmd_flags=&quot;-C&quot;</code></pre>
+<h2 id="networking">Networking</h2>
+<p>Since this is a laptop or desktop setup it may be likely you need to change the settings regularly for different wifi networks you encounter, for this I really like this wireless script by overrider on github.</p>
+<pre><code>pkg_add -v git
+git clone https://github.com/overrider/wireless
+cd wireless
+mv wireless /usr/local/bin/
+mv wireless.cfg /etc/</code></pre>
+<p>then edit <code>/etc/wireless.cfg</code> for your network’s settings and then run <code>wireless $yournetworkname</code></p>
+<p>setting up doas so you dont have to use root or sudo <code>vi /etc/doas.conf</code></p>
+<pre><code>permit nopass keepenv { ENV PS1 SSH_AUTH_SOCK } :wheel</code></pre>
+<p>or if you want to be asked for a password:</p>
+<pre><code>permit keepenv { ENV PS1 SSH_AUTH_SOCK } :wheel</code></pre>
+<p>Then just make sure your user is a member of the wheel group.</p>
+<h3 id="further-reading">Further reading:</h3>
+<p><a href="http://www.openbsdjumpstart.org" class="uri">http://www.openbsdjumpstart.org</a><br />
+<a href="http://www.bsdnow.tv/tutorials/the-desktop-obsd" class="uri">http://www.bsdnow.tv/tutorials/the-desktop-obsd</a><br />
+<a href="http://www.gabsoftware.com/tips/tutorial-install-gnome-desktop-and-gnome-display-manager-on-openbsd-4-8/" class="uri">http://www.gabsoftware.com/tips/tutorial-install-gnome-desktop-and-gnome-display-manager-on-openbsd-4-8/</a><br />
+<a href="http://www.lounge.se/wiki2/show/GnomeOnOpenBSD" class="uri">http://www.lounge.se/wiki2/show/GnomeOnOpenBSD</a><br />
+<a href="http://www.badbug.id.au/doas-or-how-i-use-sudo-on-openbsd-5-8/" class="uri">http://www.badbug.id.au/doas-or-how-i-use-sudo-on-openbsd-5-8/</a></p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//nfalcone.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+        <div id="footer">
+all works licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+</br>
+Site last generated: Fri Mar 11 17:48:45 UTC 2016        
+</div>
+    </body>
+</html>

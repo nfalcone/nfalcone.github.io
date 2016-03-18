@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>nick's home page - Console Access to Nortel Baystack 5510-48T</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">/home/nick</a>
+            </div>
+            <div id="navigation">
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a href="../misc">misc</a>
+		<a href="../links.html">Links</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Console Access to Nortel Baystack 5510-48T</h1>
+
+            <div class="info">
+    Posted on January 17, 2016
+    
+</div>
+
+<p>For my homelab setup I purchased a Baystack 5510-48T, this filled my need for a manageable (semi)Layer 3 switch and at a great price. I really wanted some cisco gear but it was just way out of budget for the home.<br />
+<img src="../images/switch.jpg" /></p>
+<p>I snagged the switch off ebay for ~$50 which is amazing for 48 gig ports. After racking, I needed to console into the device to set an IP and make sure telnet was working. This turned to be a little more difficult than I expected.</p>
+<p>First I used a null modem cable, which after doing a little research found out will not work. Reading online some posts state that it requires an official Nortel console cable, well I did not belive that (or want to) as the official cable cost more than the switch on ebay. So I did more reading and found it seems to only need a straight through serial cable like this <a href="http://www.amazon.com/StarTech-6-Feet-Straight-Through-Serial/dp/B00066HP2E">one from amazon</a>. Combining that cable with my usb to serial adapter <a href="http://www.amazon.com/TRENDnet-TU-S9-USB-Serial-Converter/dp/B0007T27H8">like this one</a>.</p>
+<p>I used ubuntu to get into the switch but if you are using mac or windows you may need to get drivers for the tu-s9 <a href="http://downloads.trendnet.com/tu-s9/Driver/">from here</a>. Then download <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">putty</a>.</p>
+<p>So first I opened putty and set the serial device as <strong><em>/dev/ttyUSB0</em></strong> (again if you are on windows or mac this will be different). <img src="../images/putty1.png" /></p>
+<p>Make sure the settings under serial are set as this as well. <img src="../images/putty2.png" /></p>
+<p>I banged my head against the wall for awhile at this, putty still was blank! I had the settings right and the right cable so what was going on. I tried sending <strong>breaks</strong> as well as <strong>CTRL+Y</strong> (remembering this is necessary to see the Nortel Menu) did not work, in addition to just banging on the keyboard. <img src="../images/putty3.png" /></p>
+<p>The trick was <strong>CTRL+W</strong>, I found that bit of info at the bottom of <a href="https://www.reddit.com/r/homelab/comments/279268/my_nortel_baystack_552024t_552048t_551048t_in/cm3pcbf">this reddit thread</a> and seemingly nothing else I skimmed through mentioned it.</p>
+<p>As soon as I hit <strong>CTRL+W</strong> I was greeted with the Nortel logo like below:</p>
+<div class="figure">
+<img src="../images/putty4.png" />
+
+</div>
+<p>Then, I hit <strong>CTRL+Y</strong> and got the menu I was expecting. <img src="../images/putty5.png" /></p>
+<p>From there I went to IP Configuration/Setup and filled in my settings, don’t forget to do the <strong>IP Address to Ping:</strong> otherwise it will not fill in the IP under the <strong>In Use</strong> column.</p>
+<div class="figure">
+<img src="../images/putty6.png" />
+
+</div>
+<p>Now I just have to find and install some more up to date firmware, that will be another post.</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//nfalcone.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+        <div id="footer">
+all works licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+</br>
+Site last generated: Fri Mar 11 17:48:45 UTC 2016        
+</div>
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>nick's home page - Getting started with hakyll on FreeBSD</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">/home/nick</a>
+            </div>
+            <div id="navigation">
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+		<a href="../misc">misc</a>
+		<a href="../links.html">Links</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>Getting started with hakyll on FreeBSD</h1>
+
+            <div class="info">
+    Posted on February 17, 2016
+    
+</div>
+
+<p>Since I have recently switched my site over to be on FreeBSD 10.2 server I figured it would be a good time to write up how I got hakyll installed. Setting it up on Debian turned out to be a bit of an ordeal the first few times, so I was very pleasantly surprised to find out how much easier it was to install on FreeBSD.</p>
+<p>There is no hakyll package for FreeBSD so we will be installing cabal and installing via that, which is better anyway. I am including tmux here because if you have built anything haskell related before you know it takes quite awhile. So I recommend running the install job in a tmux session.</p>
+<pre><code>pkg install hs-cabal-install tmux</code></pre>
+<p>Next we start up cabal, note again I am starting a tmux session because this could take some time.</p>
+<pre><code>tmux
+cabal update
+Config file path source is default config file.
+Config file /root/.cabal/config not found.
+Writing default configuration to /root/.cabal/config
+Downloading the latest package list from hackage.haskell.org</code></pre>
+<p>Now that cabal is all set, lets actually install hakyll.</p>
+<pre><code>cabal install hakyll</code></pre>
+<p>Then go take a break, this will be awhile on a 1Gb SSD vps it took - 1 hour and 30 minutes.</p>
+<p>Once it finishes you need to add your <code>$HOME/.cabal/bin</code> to your path or run <code>./.cabal/bin/hakyll-init your-site-name-here</code> Since you will really only need to “init” your site once.</p>
+<p>One more thing and you are all ready to build your hakyll site.</p>
+<p>Next we need to enable UTF-8 on Freebsd otherwise hakyll gives an error like: commitBuffer: invalid argument (invalid character)</p>
+<p>When you try to build your site.</p>
+<p>The Hakyll documentation states to try:</p>
+<pre><code>LANG=en_US.UTF-8 ./site build</code></pre>
+<p>But I still was receiving the same error. So…</p>
+<p>To fix edit <code>/etc/login.conf</code></p>
+<pre><code>vi /etc/login.conf</code></pre>
+<p>and at the bottom of the <strong>default</strong> block add</p>
+<pre><code>:charset=UTF-8:\
+:lang=en_US.UTF-8:</code></pre>
+<p>Then reboot the machine or run <code>cap_mkdb /etc/login.conf</code> and you should be all set.</p>
+<p>Another note is that I ran all this as root, you will want to do that or run with sudo so that hakyll gets installed systemwide (if you are okay with that).</p>
+
+<div id="disqus_thread"></div>
+<script>
+/**
+* RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+* LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+
+s.src = '//nfalcone.disqus.com/embed.js';
+
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+        </div>
+        <div id="footer">
+all works licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+</br>
+Site last generated: Fri Mar 11 17:48:45 UTC 2016        
+</div>
+    </body>
+</html>

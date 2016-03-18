@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Catrina &#38; Nick&#039;s Wedding</title>
+	<atom:link href="http://catrinaandnick2015.com/?feed=rss2" rel="self" type="application/rss+xml" />
+	<link>http://catrinaandnick2015.com</link>
+	<description>5-30-2015</description>
+	<lastBuildDate>Mon, 09 Feb 2015 00:49:37 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=4.1</generator>
+	<item>
+		<title>Welcome!</title>
+		<link>http://catrinaandnick2015.com/?p=16</link>
+		<comments>http://catrinaandnick2015.com/?p=16#comments</comments>
+		<pubDate>Sun, 08 Feb 2015 23:54:10 +0000</pubDate>
+		<dc:creator><![CDATA[catrina]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://catrinaandnick2015.com/?p=16</guid>
+		<description><![CDATA[Welcome to our wedding website! We are counting down the days until May 30th and can&#8217;t wait to celebrate with you! Above this post  are the sections containing important information regarding the festivities and we hope you find them helpful!]]></description>
+				<content:encoded><![CDATA[<p>Welcome to our wedding website! We are counting down the days until May 30th and can&#8217;t wait to celebrate with you!</p>
+<p>Above this post  are the sections containing important information regarding the festivities and we hope you find them helpful!</p>
+<p><a href="http://catrinaandnick2015.com/wp-content/uploads/2015/02/bouquet.jpg"><img class="alignnone size-medium wp-image-18 aligncenter" src="http://catrinaandnick2015.com/wp-content/uploads/2015/02/CatrinaNick_31.jpg" alt="bouquet" width="300" height="300" /></a></p>
+]]></content:encoded>
+			<wfw:commentRss>http://catrinaandnick2015.com/?feed=rss2&#038;p=16</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+	</channel>
+</rss>
